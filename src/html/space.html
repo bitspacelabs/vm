@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC VM Space</title>
+    <link rel="stylesheet" href="./css/css2.css">
+    <link rel="stylesheet" href="./css/css1.css">
+    <link rel="stylesheet" href="./css/div.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="d-flex" style="width: 100vw;">
+            <a class="logo-box" style="display: block; flex: 1;" href="index.html">
+                <svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 65 65" width="20" height="20" class="ng-star-inserted"><g transform="translate(0.00630876,-0.00301984)"><path d="m63.033,39.744c-4.274,17.143-21.637,27.576-38.782,23.301-17.138-4.274-27.571-21.638-23.295-38.78,4.272-17.145,21.635-27.579,38.775-23.305,17.144,4.274,27.576,21.64,23.302,38.784z" fill="#f7931a"></path><path fill="#FFF" d="m46.103,27.444c0.637-4.258-2.605-6.547-7.038-8.074l1.438-5.768-3.511-0.875-1.4,5.616c-0.923-0.23-1.871-0.447-2.813-0.662l1.41-5.653-3.509-0.875-1.439,5.766c-0.764-0.174-1.514-0.346-2.242-0.527l0.004-0.018-4.842-1.209-0.934,3.75s2.605,0.597,2.55,0.634c1.422,0.355,1.679,1.296,1.636,2.042l-1.638,6.571c0.098,0.025,0.225,0.061,0.365,0.117-0.117-0.029-0.242-0.061-0.371-0.092l-2.296,9.205c-0.174,0.432-0.615,1.08-1.609,0.834,0.035,0.051-2.552-0.637-2.552-0.637l-1.743,4.019,4.569,1.139c0.85,0.213,1.683,0.436,2.503,0.646l-1.453,5.834,3.507,0.875,1.439-5.772c0.958,0.26,1.888,0.5,2.798,0.726l-1.434,5.745,3.511,0.875,1.453-5.823c5.987,1.133,10.489,0.676,12.384-4.739,1.527-4.36-0.076-6.875-3.226-8.515,2.294-0.529,4.022-2.038,4.483-5.155zm-8.022,11.249c-1.085,4.36-8.426,2.003-10.806,1.412l1.928-7.729c2.38,0.594,10.012,1.77,8.878,6.317zm1.086-11.312c-0.99,3.966-7.1,1.951-9.082,1.457l1.748-7.01c1.982,0.494,8.365,1.416,7.334,5.553z"></path></g></svg>
+                <span>BTC <span class="hiddenphone">VM SPACE</span></span>
+            </a>
+            <div class="d-flex">
+                <div class="search-box-container mr-2">
+                    <input formcontrolname="searchText" class="form-control ng-pristine ng-invalid ng-touched" value="" placeholder="Space ID" id="spaceId" />
+                </div>
+                <button onclick="onSearch()" class="btn btn-purple">
+                    <svg style="width: 15px; margin-top: -2px" role="img" aria-labelledby="svg-inline--fa-title-rxETlw69G5Wg" data-prefix="fas" data-icon="magnifying-glass" class="svg-inline--fa fa-magnifying-glass fa-fw" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><title id="svg-inline--fa-title-rxETlw69G5Wg">搜索</title><path fill="currentColor" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="flex-grow-1 d-flex flex-column">
+        <main>
+            <div id="inner" class="inner">
+                <div>
+                    <div>Hash</div>
+                    <div>
+                        <div id="res_hash" class="tx-page-container">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 40px;">
+                        <div>
+                            <div>Space ID</div>
+                            <div><div id="res_spaceID" class="tx-page-container" style="display: inline-block; color: var(--taproot);"></div></div>
+                        </div>
+                        <div>
+                            <div>Type  </div>
+                            <div><div id="res_type" class="tx-page-container" style="display: inline-block;"></div></div>
+                        </div>
+                    </div>
+                    <div id="token"></div>
+                </div>
+
+                <div style="position: relative;">
+                    <div class="layui-tab" lay-filter="test-hash">
+                        <ul class="layui-tab-title">
+                          <li class="layui-this" lay-id="logs">Logs</li>
+                          <li lay-id="code">Space Code</li>
+                          <li lay-id="space">Space (Read/Write)</li>
+                          <li lay-id="holders" id="holders_tab_title">Holders</li>
+                        </ul>
+                        <div class="layui-tab-content">
+                          <div class="layui-tab-item layui-show">
+                                <div>
+                                    <ul id="logs_ul"></ul>
+                                    <button onclick="next_logs(res_spaceID.innerText)" class="next_logs"> next logs </button>
+                                </div>
+                          </div>
+                          <div class="layui-tab-item">
+                            <div>
+                                <div>
+                                    <pre id="res_vm_text"  style="min-width:300px; "></pre>
+                                </div>
+                            </div>                    
+                          </div>
+                          <div class="layui-tab-item">
+                            <div>
+                                <div>
+                                    <div> Read Space Information</div>
+                                    <div id="read_space" class="read_space_collapse"></div>
+                                </div>
+                                <div>
+                                    <br />
+                                    <div> Write Space</div>
+                                    <div class="">
+                                        <div style="display: flex;">
+                                            <div>Address:</div>
+                                            <div id="ws_address" onclick="onGetAddress()"></div>
+                                        </div>
+                                        <div style="display: flex;">
+                                            <div>Fee:</div>
+                                            <input placeholder="fee value" id="ws_fee" value="700" />
+                                        </div>
+                                        <div style="display: flex;">
+                                            <div>Receiver?:</div>
+                                            <input placeholder="If a receiver is required" id="recv_id" value="" />
+                                        </div>
+
+                                        <div>
+                                            <div>Select UTXO:</div>
+                                            <span id="s_utxo_text"></span>
+                                        </div>
+
+                                        <br />
+                                        <div>UTXOs:</div>
+                                        <div id="utxobox"></div>
+                                        
+                                        <br />
+                                        <div id="ws_list"></div>
+                                    </div>
+                                </div>
+                            </div>                    
+                          </div>
+                          
+
+                          <div class="layui-tab-item">
+                            <div>
+                                <div id="holders_box">
+                                </div>
+                            </div>                    
+                          </div>
+
+                        </div>
+                      </div>
+                </div>
+                
+                
+            </div>
+            
+            
+        </main>
+    </div>
+    <script src="./js/axios.min.js"></script>
+    <script src="./js/ui.js"></script>
+    <script src="./js/rpcs.js"></script>
+    <script>
+        const api = baseURL + `/api/space_info?spaceid=`
+        const test_space_id = 'btc-vm-space-token-0'
+        window.onSearch = () => {
+            console.log('spaceId::', spaceId.value)
+            onsearch(spaceId.value)
+        }
+        const onsearch = (spaceId) => {
+            if(spaceId){
+                axios.get(api + spaceId).then(res => {
+                    console.log(res.data?.data)
+                    const data = res.data.data
+                    if(data){ 
+                        const a = document.createElement('a')
+                        a.href = getMempoolTxUrl(data.hash)
+                        a.innerText = shortHash(data.hash)
+                        a.className = 'hash_link'
+                        a.setAttribute('target', '_blank')
+                        res_hash.appendChild(a)
+                        res_spaceID.innerText = data.spaceid
+                        res_type.innerText = data.type
+                        res_vm_text.innerText = data.vm_text
+
+                        if(data.type === 'btc20'){
+                            try {
+                                const obj = JSON.parse(data.space)
+                                // console.log(obj)
+                                const box = document.createElement('div')
+                                const tokenTitleNode = document.createElement('div')
+                                tokenTitleNode.className = 'token-title-node'
+                                tokenTitleNode.innerText = 'Token Info'
+                                const flexNode = document.createElement('div')
+                                flexNode.className = 'token-infos'
+
+                                const tokenName = document.createElement('div')
+                                tokenName.className = 'token-name'
+                                ;[document.createElement('div'), document.createElement('div')].forEach((element, i) => {
+                                    element.innerText = i === 0 ? 'Token Name' : obj.token_name
+                                    tokenName.appendChild(element)
+                                })
+                                flexNode.appendChild(tokenName)
+
+                                const mint_supply = document.createElement('div')
+                                mint_supply.className = 'token-mint_supply'
+                                ;[document.createElement('div'), document.createElement('div')].forEach((element, i) => {
+                                    element.innerText = i === 0 ? 'Mint Supply' : obj.mint_supply
+                                    mint_supply.appendChild(element)
+                                })
+                                flexNode.appendChild(mint_supply)
+
+                                const supply = document.createElement('div')
+                                supply.className = 'token-supply'
+                                ;[document.createElement('div'), document.createElement('div')].forEach((element, i) => {
+                                    element.innerText = i === 0 ? 'Supply' : obj.supply
+                                    supply.appendChild(element)
+                                })
+                                flexNode.appendChild(supply)
+                                
+                                box.appendChild(tokenTitleNode)
+                                box.appendChild(flexNode)
+                                token.appendChild(box)
+                            } catch (error) {
+                            }
+                        }else{
+                            holders_tab_title.setAttribute('style', 'display:none')
+                        }
+
+                        // read_space
+
+                        try {
+                            const obj = JSON.parse(data.space)
+                            Object.keys(obj).forEach(key => {
+                                const node = document.createElement('div')
+                                const nodeTitle = document.createElement('div')
+                                const nodeContent = document.createElement('div')
+                                node.className = 'colla-item'
+                                node.appendChild(nodeTitle)
+                                node.appendChild(nodeContent)
+                                nodeTitle.innerText = key
+                                nodeTitle.className= 'colla-title'
+                                nodeContent.className = 'colla-content show'
+                                const val = obj[key]
+                                if(typeof val !=="object") {
+                                    nodeContent.innerText = obj[key]
+                                }else{
+                                    if(key === 'balances'){
+                                        const holdersNode = document.createElement('div')
+                                        holders_box.appendChild(holdersNode)
+                                        Object.keys(val).map((addr) => {
+                                            const addressNode = document.createElement('a')
+                                            addressNode.href = getMempoolAddressUrl(addr)
+                                            addressNode.setAttribute('target', '_blank')
+                                            addressNode.innerText = shortAddress(addr) + ':' + val[addr]
+                                            addressNode.className = 'user-item'
+                                            holdersNode.appendChild(addressNode)
+                                        })
+                                    }
+                                    const selectNode = document.createElement('div')
+                                    const inputNode = document.createElement('input')
+                                    const buttonNode = document.createElement('button')
+                                    buttonNode.innerText = 'search'
+                                    buttonNode.setAttribute('style', 'padding: 0px 10px; margin-left: 10px')
+                                    selectNode.appendChild(inputNode)
+                                    selectNode.appendChild(buttonNode)
+                                    nodeContent.appendChild(selectNode)
+                                    selectNode.className = 'select-node'
+                                    
+                                    buttonNode.onclick = () => {
+                                        const selectNode = node
+                                        // console.log('inputNode::', inputNode.value)
+                                        const res = val[inputNode.value]
+                                        const oldNode = selectNode.getElementsByClassName('res')[0]
+                                        // console.log(oldNode, selectNode)
+                                        if(oldNode) { 
+                                            selectNode.removeChild(oldNode)
+                                        }
+                                        const resNode = document.createElement('div')
+                                        resNode.className = 'res'
+                                        selectNode.appendChild(resNode)
+                                        if(res) {
+                                            resNode.innerText = res
+                                        }else{
+                                            resNode.innerText = 'NULL'
+                                            resNode.setAttribute('style', 'text-align: center')
+                                        }
+                                    }
+                                }
+                                read_space.appendChild(node)
+                                return node
+                            })
+                        } catch (error) {
+                            
+                        }
+                    }
+                })
+                rpc_logs(spaceId)
+            }
+        }
+        const url = new URL(window.location.href)
+        const url_spaceid = url.searchParams.get('spaceid')
+        onsearch(url_spaceid)
+
+
+        let select_utxo
+
+
+        const wallet = {
+            async getAccounts() {
+                try {
+                    return await window.unisat.getAccounts();
+                } catch (error) {
+                    try {
+                        return await window.okxwallet.bitcoin.getAccounts();
+                    } catch (error) {
+                        
+                    }
+                }
+            },
+            async requestAccounts() {
+                try {
+                    return await window.unisat.requestAccounts();
+                } catch (error) {
+                    try {
+                        return await window.okxwallet.bitcoin.requestAccounts();
+                    } catch (error) {
+                        
+                    }
+                }
+            },
+            async signPsbt(arg){
+                try {
+                    return await window.unisat.signPsbt(arg);
+                } catch (error) {
+                    try {
+                        console.log(error)
+                        return await window.okxwallet.bitcoin.signPsbt(arg);
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            },
+            async pushPsbt(arg){
+                try {
+                    return await window.unisat.pushPsbt(arg);
+                } catch (error) {
+                    console.log(error)
+                    try {
+                        return await window.okxwallet.bitcoin.pushPsbt(arg);
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            }
+        }
+        const onGetAddress = async () => {
+            try {
+            let res = await wallet.getAccounts();
+            console.log(res)
+            if(res.length === 0){
+                ws_address.innerText = 'Connect'
+                await wallet.requestAccounts();
+                onGetAddress()
+                return
+            }
+            ws_address.innerText = res[0]
+            if(ws_address.innerText) {
+                utxobox.innerHTML = ''
+                const res = await axios.get('https://mempool.space/api/address/' + ws_address.innerText + '/utxo')
+                if(res.data){
+                    res.data.map(e => {
+                        return {
+                            txid: e.txid,
+                            vout: e.vout,
+                            value: e.value,
+                        }
+                    }).forEach((e, index) => {
+                        var node = document.createElement('div')
+                        node.setAttribute('style', 'white-space: break-spaces;word-break:break-all;cursor:pointer;')
+                        // node.innerText = JSON.stringify(e)
+                        node.innerText = [shortHash2(e.txid), e.vout, e.value / 1e8 + 'btc'].join('__')
+                        node.onclick = () => {
+                            select_utxo = e
+                            s_utxo_text.innerText = [shortHash2(e.txid), e.vout, e.value / 1e8 + 'btc'].join('__')
+                        }
+                        utxobox.appendChild(node)
+                        
+                        if(!select_utxo && index === 0) {
+                            select_utxo = e
+                            s_utxo_text.innerText = [shortHash2(e.txid), e.vout, e.value / 1e8 + 'btc'].join('__')
+                        }
+                    })
+                }
+                // utxobox
+            }
+            } catch (e) {
+                console.log(e);
+                ws_address.innerText = 'Connect'
+            }
+        }
+        const setWSList = () => {
+            
+            res_vm_text.innerText.match(/(?<=function pub_)(\S*)(?=\))/g).map(e => e.split('(')).map((e) => {
+                if(e[1].length == 0){
+                    return {
+                        func_name: e[0],
+                        params: []
+                    }
+                } 
+                return {
+                    func_name: e[0],
+                    params:e[1].split(',')
+                }
+            }).map((e) => {
+                const node = document.createElement('div')
+                const nodeName = document.createElement('div')
+                const callBlockNode = document.createElement('div')
+                nodeName.innerHTML = e.func_name
+                node.appendChild(nodeName)
+                node.appendChild(callBlockNode)
+                callBlockNode.setAttribute('style', 'display: flex')
+                callBlockNode.className = 'ws_call_block'
+                const params_val = []
+                for (const [param_name, i] of e.params.map((e, i) => [e, i])) {
+                    params_val.push('')
+                    const input = document.createElement('input')
+                    input.placeholder = param_name
+                    input.oninput = () => {
+                        params_val[i] = input.value
+                    }
+                    callBlockNode.appendChild(input)
+                }
+                var button = document.createElement('button')
+                callBlockNode.appendChild(button)
+                button.innerText = e.func_name 
+
+                
+                
+                button.onclick = () => {
+                    const recv = recv_id.value
+                    console.log(recv_id, recv)
+                    onSend(e.func_name, params_val.length === 0 ? '' : JSON.stringify(params_val), recv)
+                }
+                ws_list.appendChild(node)
+            })
+
+        }
+        setTimeout(() => {
+            onGetAddress()
+            
+            // TODO 
+            setWSList()
+        }, 900)
+
+        const onSend = (func_name, space_params, recv) => {
+            const payerAddress = ws_address.innerText
+            if(!payerAddress) {
+                return 
+            }
+            const spaceId = res_spaceID.innerText
+            if(!spaceId){
+                return
+            }
+            const fee_value = ws_fee.value
+
+            if(!fee_value) {
+                return 
+            }
+
+            if(!select_utxo) {
+                return
+            }
+
+            // const utxo = {"txid":"19638ee8f3a37fbe5fa8b09b42a853f418045fff148eff84671607122706ec1d","vout":1,"value":80540}
+            const spaceCall = space_params.length ? [spaceId, func_name, space_params].join(' ') : [spaceId, func_name].join(' ')
+
+            const params = {
+                payerAddress,
+                spaceCall,
+                fee_value,
+                txid: select_utxo.txid,
+                vout: select_utxo.vout,
+                value: select_utxo.value,
+                recv
+            }
+            console.log(params)
+
+            axios.get(baseURL + '/api/call_psbt', {params}).then(async res => {
+                const psbthex = res.data.data
+                console.log(psbthex)
+                if(psbthex) {
+                    let sign_psbt_res = await wallet.signPsbt(psbthex)
+                    console.log(sign_psbt_res)
+                    if(sign_psbt_res) {
+                        const id = await wallet.pushPsbt(sign_psbt_res)
+                        alert('txid:' + id)
+                    }
+                }
+            })
+
+        }
+
+        layui.use(function(){
+  var element = layui.element;
+  
+  var hashName = 'tabid'; 
+  var layid = location.hash.replace(new RegExp('^#'+ hashName + '='), ''); 
+    
+  element.tabChange('test-hash', layid);
+  element.on('tab(test-hash)', function(obj){
+    location.hash = hashName +'='+ this.getAttribute('lay-id');
+  })
+})
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+/target
+/node_modules
+.env
+*.test.ts
+*.test.db
+vm.db
+.env
+.test.env
+todo
+lastBlock.txt
+todo.md

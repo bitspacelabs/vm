@@ -1,0 +1,89 @@
+use serde_json::json;
+use crate::{btc_client::btc_client_run, btc_json_serde::{NodeInfo, RpcJsonBlock, RpcJsonBlockhash, RpcJsonRawTransaction}};
+
+pub async fn btc_rpc_node_info() -> Result<NodeInfo, ()>{
+    let builder = btc_client_run().await.map_err(|_| ())?;
+    let request_body = json!({
+        "jsonrpc": "1.0",
+        "id": "curltest",
+        "method": "getblockchaininfo",
+        "params": []
+    });
+    let response = builder
+        .json(&request_body)
+        .send()
+        .await
+        .map_err(|_| ())?;
+
+    let response_json: NodeInfo = response
+        .json()
+        .await
+        .map_err(|_| ())?;
+    // println!("Blockchain info: {:?}, blocks::{}", response_json, response_json.result.blocks);
+    Ok(response_json)
+}
+
+pub async fn btc_rpc_block_hash(block_height: i64) -> Result<RpcJsonBlockhash, ()>{
+    let builder = btc_client_run().await.map_err(|_| ())?;
+    let request_body = json!({
+        "jsonrpc": "1.0",
+        "id": "curltest",
+        "method": "getblockhash",
+        "params": [block_height]
+    });
+    let response = builder
+        .json(&request_body)
+        .send()
+        .await
+        .map_err(|err| println!("btc_rpc_block err: {}", err))?;
+
+    let response_json: RpcJsonBlockhash = response
+        .json()
+        .await
+        .map_err(|err| println!("btc_rpc_block json err: {}", err))?;
+    Ok(response_json)
+}
+
+pub async fn btc_rpc_block(blockhash: String) -> Result<RpcJsonBlock, ()>{
+    let builder = btc_client_run().await.map_err(|_| ())?;
+    let request_body = json!({
+        "jsonrpc": "1.0",
+        "id": "curltest",
+        "method": "getblock",
+        "params": [blockhash]
+    });
+    let response = builder
+        .json(&request_body)
+        .send()
+        .await
+        .map_err(|err| println!("btc_rpc_block err: {}", err))?;
+
+    // println!("btc_rpc_block response::{:#?}", response);
+    let response_json: RpcJsonBlock = response
+        .json()
+        .await
+        .map_err(|err| println!("btc_rpc_block json err: {}", err))?;
+    Ok(response_json)
+}
+
+pub async fn btc_rpc_raw_transaction(txid: String, block_hash: String) -> Result<RpcJsonRawTransaction, ()>{
+    let builder = btc_client_run().await.map_err(|_| ())?;
+    let request_body = json!({
+        "jsonrpc": "1.0",
+        "id": "curltest",
+        "method": "getrawtransaction",
+        "params": [txid, true, block_hash]
+    });
+    let response = builder
+        .json(&request_body)
+        .send()
+        .await
+        .map_err(|err| println!("btc_rpc_raw_transaction err: {}", err))?;
+
+    let response_json: RpcJsonRawTransaction = response
+        .json()
+        .await
+        .map_err(|err| println!("RpcJsonRawTransaction json err: {}", err))?;
+    Ok(response_json)
+}
+
